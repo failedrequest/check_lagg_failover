@@ -1,6 +1,6 @@
 check_lagg_lacp
 ===================
-Build from https://github.com/jeanpaulgalea/check_lagg_failover 
+Derived from https://github.com/jeanpaulgalea/check_lagg_failover 
 
 Nagios plugin for FreeBSD lagg lacp interface.
 
