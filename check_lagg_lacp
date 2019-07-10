@@ -1,8 +1,9 @@
+
 #!/bin/sh
 
-# Nagios plugin for FreeBSD lagg failover interface.
+# Nagios plugin for FreeBSD lagg lacp interface.
 #
-# Alert when a lagg failover interface has failed-over to a slave port.
+# Alert when a lagg lacp leg is down
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -23,9 +24,9 @@ print_help() {
 	echo ""
 	print_usage
 	echo ""
-	echo "Alert when a lagg failover interface has failed-over to a slave port."
+	echo "Alert when a lacp child interface is not active."
 	echo ""
-	echo "Send email to jp@galea.se if you have questions, patches or suggestions."
+	echo "Send email to nonesuch@longcount.org if you have questions, patches or suggestions."
 }
 
 if [ $# -lt 1 ] ; then
@@ -54,15 +55,16 @@ if ! ifconfig "$iface" 1>/dev/null 2>/dev/null ; then
 	exit $STATE_WARNING
 fi
 
-if ! ifconfig "$iface" | grep -Fq "laggproto failover" ; then
-	echo "WARN - $iface is not a link failover interface!"
+if ! ifconfig "$iface" | grep -Fq "laggproto lacp" ; then
+	echo "WARN - $iface is not a lacp link interface!"
 	exit $STATE_WARNING
 fi
 
-if ! ifconfig "$iface" | grep -F "laggport: " | grep -Fq "MASTER,ACTIVE" ; then
-	echo "CRIT - $iface master port is not active!"
+if ! ifconfig "$iface" | grep -F "laggport: " | grep -Fq "ACTIVE,COLLECTING,DISTRIBUTING" ; then
+        DONW=$(ifconfig "$iface" |awk 'BEGIN {$1 ~ /laggport:/}  $3 !~ /ACTIVE,COLLECTING,DISTRIBUTING/ {print $2}')
+	echo "CRIT - $iface laggport: $DOWN "
 	exit $STATE_CRITICAL
 fi
 
-echo "OK - $iface master port is active"
+echo "OK - $iface lacp is active"
 exit $STATE_OK

@@ -1,16 +1,17 @@
-check_lagg_failover
+check_lagg_lacp
 ===================
+Build from https://github.com/jeanpaulgalea/check_lagg_failover 
 
-Nagios plugin for FreeBSD lagg failover interface.
+Nagios plugin for FreeBSD lagg lacp interface.
 
-Alert when a lagg failover interface has failed-over to a slave port.
+Alert when a lagg lacp interface has failed-over to a slave port.
 
 For more information about lagg interfaces in general;  
 http://www.freebsd.org/doc/handbook/network-aggregation.html
 
 This check is meant to serve two purposes;
 
-1. To alert that, for some reason, the master port is no longer active.
+1. To alert that, for some reason, a child port is not active
 
 	This could mean that the nic card is fried,
 	the upstream switch is down, etc.
@@ -21,15 +22,12 @@ This check is meant to serve two purposes;
 	This is especially important when the lagg interface
 	is configured with only two ports.
 
-	In such configurations, running with a disabled MASTER port is risky,
-	as there is no fail-over capability.
-
 
 Limitations
 -----------
 
-This plugin only works when the lagg interface is configured in "Failover Mode".
-
+This plugin only works when the lagg interface is configured in "LACP Mode".
+For failover see https://github.com/jeanpaulgalea/check_lagg_failover
 
 Dependencies
 ------------
@@ -40,27 +38,27 @@ Dependencies
 Installation
 ------------
 
-Copy `check_lagg_failover` to `/usr/local/libexec/nagios/check_lagg_failover`
+Copy `check_lagg_lacp` to `/usr/local/libexec/nagios/check_lagg_lacp`
 
 Then set ownership and permissions;
 ```
-chown root:wheel /usr/local/libexec/nagios/check_lagg_failover
-chmod 0555       /usr/local/libexec/nagios/check_lagg_failover
+chown root:wheel /usr/local/libexec/nagios/check_lagg_lacp
+chmod 0555       /usr/local/libexec/nagios/check_lagg_lacp
 ```
 
 Examples
 -------
 
 ```
-~$ /usr/local/libexec/nagios/check_lagg_failover lagg0
-OK - lagg0 master port is active
+~$ /usr/local/libexec/nagios/check_lagg_lacp lagg0
+OK - lagg0 lacp is active
 ~$ echo $?
 0
 ```
 
 ```
-~$ /usr/local/libexec/nagios/check_lagg_failover igb0
-WARN - igb0 is not a link failover interface!
+~$ /usr/local/libexec/nagios/check_lagg_lacp igb0
+WARN - igb0 is not a link lacp interface!
 ~$ echo $?
 1
 ```
@@ -71,7 +69,5 @@ Testing
 Tested with a lagg interface consisting of two ports ("laggport"),
 although it should work with any number of ports.
 
-Tested on FreeBSD 9.2-RELEASE-p5.
+Tested on FreeBSD 10.3-STABLE 11.2-STABLE and 12.0.STABLE
 
-If you can confirm this plugin to work with other versions or configurations,
-please contact me so I can update this section. Thank you!
