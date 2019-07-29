@@ -4,7 +4,7 @@ Derived from https://github.com/jeanpaulgalea/check_lagg_failover
 
 Nagios plugin for FreeBSD lagg lacp interface.
 
-Alert when a lagg lacp interface has failed-over to a slave port.
+Alert when a lagg lacp interface has a down or failed slave port.
 
 For more information about lagg interfaces in general;  
 http://www.freebsd.org/doc/handbook/network-aggregation.html
