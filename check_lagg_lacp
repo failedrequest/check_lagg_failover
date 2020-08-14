@@ -1,6 +1,7 @@
 
 #!/bin/sh
-
+# Mark Saad | nonesuch@longcount.org
+# v 1.1
 # Nagios plugin for FreeBSD lagg lacp interface.
 #
 # Alert when a lagg lacp leg is down
